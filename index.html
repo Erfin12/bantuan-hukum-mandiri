@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2026 Erfin. See LICENSE.txt. -->
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="Bantuan Hukum Mandiri: cek pasal, kunci bukti, buat somasi. 100% offline dan privat di HP kamu.">
+  <title>Bantuan Hukum Mandiri</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <!-- v6 Mode Terang: baca preferensi tema SEBELUM halaman tampil agar tidak berkedip -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === '"light"') t = 'light';
+        if (t === 'light') {
+          document.documentElement.classList.remove('dark');
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', '#f1f5f9');
+        }
+      } catch (e) { /* localStorage diblokir: tetap mode gelap */ }
+    })();
+  </script>
+  <!-- Anti-flicker: warna dasar dipasang sebelum CSS luar dimuat -->
+  <style>
+    html.dark, html.dark body { background: #0f172a; color: #e2e8f0; }
+    html:not(.dark), html:not(.dark) body { background: #f1f5f9; color: #1e293b; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script defer src="js/core.js"></script>
+  <script defer src="js/ai-engine.js"></script>
+  <script defer src="js/nlp-engine.js"></script>
+  <script defer src="js/hash.js"></script>
+  <script defer src="js/pdf.js"></script>
+  <script defer src="js/pdf2.js"></script>
+  <script defer src="js/ots-rekam.js"></script>
+  <script defer src="js/rekam.js"></script>
+  <script defer src="js/ocr.js"></script>
+  <script defer src="js/qr.js"></script>
+  <script defer src="js/p2p.js"></script>
+  <script defer src="js/simulasi.js"></script>
+  <script defer src="js/suara.js"></script>
+  <script defer src="js/alat.js"></script>
+  <script defer src="js/alat2.js"></script>
+  <script defer src="js/alat3.js"></script>
+  <script defer src="js/jelajah.js"></script>
+  <script defer src="js/kuhp.js"></script>
+  <script defer src="js/mudah.js"></script>
+  <script defer src="js/fitur-v6.js"></script>
+  <script defer src="js/fitur-v62.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body class="bg-slate-900 font-sans text-slate-200 antialiased">
+
+  <!-- v6: Banner "Pembaruan Tersedia" (PWA update) -->
+  <div id="banner-update" role="alert" class="banner-update hidden" aria-live="assertive">
+    <span class="banner-update-teks">Pembaruan database tersedia. Muat ulang?</span>
+    <button type="button" id="btnMuatUlang" class="banner-update-tombol">Muat Ulang</button>
+    <button type="button" id="btnTutupBanner" class="banner-update-tutup" aria-label="Tutup pemberitahuan">✕</button>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="sticky top-0 z-20 border-b border-slate-800 bg-slate-900/90 backdrop-blur">
+    <div class="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
+      <div class="flex min-w-0 items-center gap-2.5">
+        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500 text-lg shadow-lg shadow-indigo-500/30" aria-hidden="true">⚖️</span>
+        <div>
+          <h1 class="whitespace-nowrap text-sm font-bold leading-tight text-white">Bantuan Hukum Mandiri</h1>
+          <p class="text-[11px] leading-tight text-slate-400">Gratis untuk rakyat</p>
+        </div>
+      </div>
+      <div class="flex shrink-0 items-center gap-2">
+        <span class="shrink-0 rounded-full border border-indigo-500/40 bg-indigo-500/10 px-2.5 py-1 text-[11px] font-semibold text-indigo-300">🔒 <span class="hidden min-[400px]:inline">100% </span>Offline<span class="hidden min-[400px]:inline"> &amp; Privat</span></span>
+        <button type="button" id="btnTema" aria-label="Ganti ke mode terang" title="Ganti tema" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-600 bg-slate-800 text-slate-200 transition hover:border-indigo-500/60 active:scale-95">
+          <svg id="ikonMatahari" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg id="ikonBulan" class="hidden h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto w-full max-w-2xl px-4 pb-32 pt-5">
+
+    <!-- ========== BERANDA ========== -->
+    <section class="view" id="view-beranda">
+      <div class="rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-500/15 to-slate-800/40 p-5">
+        <h2 class="text-xl font-extrabold text-white">Kenali hakmu,<br>kunci buktimu.</h2>
+        <p class="mt-1.5 text-sm leading-relaxed text-slate-300">Cek dasar hukum masalahmu, kunci bukti digital, dan susun surat somasi. Semua diproses di HP ini, tanpa akun, tanpa server.</p>
+        <button type="button" data-goto="analisis" class="mt-4 w-full rounded-xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-400 active:scale-[0.98]">Mulai Analisis Hukum →</button>
+      </div>
+
+      <!-- Darurat (Fase 7) -->
+      <div class="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4">
+        <p class="text-sm font-bold text-rose-300">🚨 Situasi darurat?</p>
+        <div class="mt-2 grid grid-cols-2 gap-2">
+          <a href="tel:110" class="rounded-xl bg-rose-600 px-3 py-2.5 text-center text-sm font-bold text-white transition hover:bg-rose-500">📞 Polisi 110</a>
+          <a href="tel:129" class="rounded-xl bg-rose-600 px-3 py-2.5 text-center text-sm font-bold text-white transition hover:bg-rose-500">👩 SAPA 129</a>
+        </div>
+        <a href="https://wa.me/628111129129" target="_blank" rel="noopener" class="mt-2 block rounded-xl border border-rose-500/50 px-3 py-2.5 text-center text-sm font-semibold text-rose-200 transition hover:bg-rose-500/10">💬 WhatsApp SAPA 129 (kekerasan perempuan &amp; anak)</a>
+        <button type="button" id="btnAudioDarurat" class="mt-2 w-full rounded-xl border border-amber-500/50 bg-amber-500/10 px-3 py-2.5 text-sm font-bold text-amber-300 transition hover:bg-amber-500/20">🔊 Suara Peringatan (bacakan lantang)</button>
+      </div>
+
+      <!-- v6: Buku Saku Darurat -->
+      <section id="bukuSaku" aria-labelledby="judulBukuSaku" class="mt-4 rounded-2xl border-2 border-rose-500 bg-rose-500/10 p-4 shadow-lg shadow-rose-500/10">
+        <div class="flex items-start gap-2.5">
+          <span class="text-2xl leading-none" aria-hidden="true">📕</span>
+          <div>
+            <h2 id="judulBukuSaku" class="text-base font-extrabold leading-snug text-white">Buku Saku Darurat: Saat Ditangkap Polisi</h2>
+            <p class="mt-0.5 text-[11px] leading-snug text-rose-200">Baca pelan-pelan. Ketuk tiap poin untuk menandainya sudah kamu lakukan.</p>
+          </div>
+        </div>
+        <ul id="daftarBukuSaku" class="mt-3 space-y-2">
+          <li><button type="button" class="poin-saku flex w-full items-start gap-2.5 rounded-xl border border-rose-500/40 bg-slate-900/60 p-3 text-left" aria-pressed="false">
+            <span class="kotak-saku mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 border-rose-400 text-[12px] font-black text-transparent" aria-hidden="true">✓</span>
+            <span><strong class="block text-sm font-extrabold text-white">1. Jangan melawan secara fisik.</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">Tetap tenang, perlihatkan kedua tangan, jangan lari. Perlawanan hanya memperburuk posisimu.</span></span>
+          </button></li>
+          <li><button type="button" class="poin-saku flex w-full items-start gap-2.5 rounded-xl border border-rose-500/40 bg-slate-900/60 p-3 text-left" aria-pressed="false">
+            <span class="kotak-saku mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 border-rose-400 text-[12px] font-black text-transparent" aria-hidden="true">✓</span>
+            <span><strong class="block text-sm font-extrabold text-white">2. Tanyakan Surat Perintah Penangkapan.</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">Minta petugas memperlihatkan surat tugas dan memberikan surat perintah penangkapan (identitasmu, alasan, uraian singkat perkara, tempat pemeriksaan). Penangkapan maksimal 1x24 jam. Catat nama, pangkat, dan kesatuan petugas. <em class="not-italic font-semibold text-rose-300/90">(Pasal 95-96 UU 20/2025)</em></span></span>
+          </button></li>
+          <li><button type="button" class="poin-saku flex w-full items-start gap-2.5 rounded-xl border border-rose-500/40 bg-slate-900/60 p-3 text-left" aria-pressed="false">
+            <span class="kotak-saku mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 border-rose-400 text-[12px] font-black text-transparent" aria-hidden="true">✓</span>
+            <span><strong class="block text-sm font-extrabold text-white">3. Minta didampingi pengacara/LBH.</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">Sebut dengan jelas: "Saya minta didampingi pengacara." Bila tidak mampu, minta pendamping bantuan hukum gratis. Tunda menjawab sampai pendamping hadir. <em class="not-italic font-semibold text-rose-300/90">(Pasal 142, 31-32 UU 20/2025)</em></span></span>
+          </button></li>
+          <li><button type="button" class="poin-saku flex w-full items-start gap-2.5 rounded-xl border border-rose-500/40 bg-slate-900/60 p-3 text-left" aria-pressed="false">
+            <span class="kotak-saku mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 border-rose-400 text-[12px] font-black text-transparent" aria-hidden="true">✓</span>
+            <span><strong class="block text-sm font-extrabold text-white">4. Jangan tanda tangan BAP sebelum membaca dan mengerti.</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">Baca semua halaman. Minta perbaikan bila ada yang salah atau tidak kamu ucapkan. Kamu boleh menolak menandatangani isi yang tidak benar.</span></span>
+          </button></li>
+          <li><button type="button" class="poin-saku flex w-full items-start gap-2.5 rounded-xl border border-rose-500/40 bg-slate-900/60 p-3 text-left" aria-pressed="false">
+            <span class="kotak-saku mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 border-rose-400 text-[12px] font-black text-transparent" aria-hidden="true">✓</span>
+            <span><strong class="block text-sm font-extrabold text-white">5. Berhak menghubungi keluarga.</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">Minta keluargamu diberi tahu. Tembusan surat perintah penangkapan wajib diberikan kepada keluarga paling lama 1 hari. Sebutkan nama dan nomor yang harus dihubungi. <em class="not-italic font-semibold text-rose-300/90">(Pasal 95 ayat (3) UU 20/2025)</em></span></span>
+          </button></li>
+          <li><button type="button" class="poin-saku flex w-full items-start gap-2.5 rounded-xl border border-rose-500/40 bg-slate-900/60 p-3 text-left" aria-pressed="false">
+            <span class="kotak-saku mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 border-rose-400 text-[12px] font-black text-transparent" aria-hidden="true">✓</span>
+            <span><strong class="block text-sm font-extrabold text-white">6. Berhak memberi keterangan secara bebas.</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">Jawab seperlunya dan jujur. Kamu tidak boleh dipaksa, ditekan, atau disiksa saat diperiksa. Bila itu terjadi, catat dan sampaikan ke pendampingmu. <em class="not-italic font-semibold text-rose-300/90">(Pasal 142 huruf q UU 20/2025)</em></span></span>
+          </button></li>
+        </ul>
+        <div class="mt-3 grid grid-cols-2 gap-2">
+          <a href="tel:110" class="rounded-xl bg-rose-600 px-3 py-2.5 text-center text-sm font-bold text-white transition hover:bg-rose-500">📞 Polisi 110</a>
+          <button type="button" data-goto="alat" class="rounded-xl border border-rose-500/60 px-3 py-2.5 text-center text-sm font-bold text-rose-200 transition hover:bg-rose-500/10">⚖️ Cari LBH</button>
+        </div>
+        <p class="mt-3 text-[11px] leading-relaxed text-slate-400">Rujukan: UU No. 20 Tahun 2025 tentang KUHAP (berlaku sejak 2 Januari 2026, menggantikan UU 8/1981). Ringkasan awam, bukan nasihat hukum. Cek teks resmi di <a class="font-semibold text-indigo-300 underline" href="https://peraturan.bpk.go.id/Details/337302/uu-no-20-tahun-2025" target="_blank" rel="noopener">JDIH BPK</a> dan hubungi LBH.</p>
+      </section>
+
+      <!-- v6.2: Layanan Ini GRATIS (anti-pungli) -->
+      <section id="layananGratis" aria-labelledby="judulLayananGratis" class="mt-4 rounded-2xl border-2 border-emerald-500 bg-emerald-500/10 p-4 shadow-lg shadow-emerald-500/10">
+        <div class="flex items-start gap-2.5">
+          <span class="text-2xl leading-none" aria-hidden="true">✅</span>
+          <div>
+            <h2 id="judulLayananGratis" class="text-base font-extrabold leading-snug text-white">Layanan Ini GRATIS — Jangan Mau Dimintai Uang</h2>
+            <p class="mt-0.5 text-[11px] leading-snug text-emerald-200">Layanan negara berikut TIDAK boleh dipungut biaya. Diminta bayar di luar tarif resmi? Itu namanya pungli, dan pungli itu pidana. Ketuk tiap baris untuk lihat dasar hukumnya.</p>
+          </div>
+        </div>
+        <ul id="daftarGratis" class="mt-3 space-y-2">
+          <li>
+            <button type="button" class="item-gratis flex w-full items-start gap-2.5 rounded-xl border border-emerald-500/40 bg-slate-900/60 p-3 text-left" aria-expanded="false" aria-controls="detail-gratis-1">
+              <span class="panah-gratis mt-0.5 shrink-0 text-emerald-300 transition-transform" aria-hidden="true">▸</span>
+              <span><strong class="block text-sm font-extrabold text-white">🚔 Lapor &amp; mengadu ke polisi — GRATIS</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">Membuat laporan atau pengaduan di SPKT kantor polisi mana pun tidak dipungut biaya.</span></span>
+            </button>
+            <div id="detail-gratis-1" class="hidden mt-1.5 rounded-xl border border-emerald-500/30 bg-slate-900/60 p-3 text-[12px] leading-relaxed text-slate-300">
+              Menerima laporan dan/atau pengaduan adalah tugas dan wewenang resmi Polri, dan memberikan pelayanan kepada masyarakat adalah tugas pokoknya. Yang resmi berbayar hanya layanan yang tercantum dalam PP No. 76 Tahun 2020 (mis. SIM, STNK, BPKB, SKCK) — <strong class="text-white">laporan polisi tidak ada di daftar itu</strong>.
+              <span class="mt-1 block font-semibold text-emerald-300">Dasar: Pasal 14 ayat (1) huruf l &amp; Pasal 15 ayat (1) huruf a UU No. 2/2002 (terakhir diubah UU No. 5/2026) + PP No. 76/2020.</span>
+            </div>
+          </li>
+          <li>
+            <button type="button" class="item-gratis flex w-full items-start gap-2.5 rounded-xl border border-emerald-500/40 bg-slate-900/60 p-3 text-left" aria-expanded="false" aria-controls="detail-gratis-2">
+              <span class="panah-gratis mt-0.5 shrink-0 text-emerald-300 transition-transform" aria-hidden="true">▸</span>
+              <span><strong class="block text-sm font-extrabold text-white">⚖️ Bantuan hukum untuk yang tidak mampu — GRATIS</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">LBH/advokat terdaftar memberi bantuan hukum secara cuma-cuma sampai perkaramu selesai.</span></span>
+            </button>
+            <div id="detail-gratis-2" class="hidden mt-1.5 rounded-xl border border-emerald-500/30 bg-slate-900/60 p-3 text-[12px] leading-relaxed text-slate-300">
+              Bantuan hukum adalah jasa hukum yang diberikan <strong class="text-white">secara cuma-cuma</strong> kepada orang atau kelompok orang miskin, baik perkara pidana, perdata, maupun tata usaha negara, di dalam maupun di luar pengadilan. Cari LBH terdekat di menu Alat aplikasi ini.
+              <span class="mt-1 block font-semibold text-emerald-300">Dasar: Pasal 1 angka 1, Pasal 4 &amp; Pasal 5 UU No. 16/2011 tentang Bantuan Hukum.</span>
+            </div>
+          </li>
+          <li>
+            <button type="button" class="item-gratis flex w-full items-start gap-2.5 rounded-xl border border-emerald-500/40 bg-slate-900/60 p-3 text-left" aria-expanded="false" aria-controls="detail-gratis-3">
+              <span class="panah-gratis mt-0.5 shrink-0 text-emerald-300 transition-transform" aria-hidden="true">▸</span>
+              <span><strong class="block text-sm font-extrabold text-white">💼 Advokat yang ditunjuk negara — GRATIS</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">Untuk perkara berat, pejabat wajib menunjuk advokat untukmu di semua tahap pemeriksaan.</span></span>
+            </button>
+            <div id="detail-gratis-3" class="hidden mt-1.5 rounded-xl border border-emerald-500/30 bg-slate-900/60 p-3 text-[12px] leading-relaxed text-slate-300">
+              Wajib tanpa syarat untuk ancaman pidana mati, seumur hidup, atau 15 tahun ke atas. Untuk ancaman 5 tahun ke atas, wajib bila kamu <strong class="text-white">tidak mampu</strong> dan tidak punya advokat sendiri. Bantuan hukum juga wajib diberikan kepada pelapor, saksi, atau korban yang tidak mampu.
+              <span class="mt-1 block font-semibold text-emerald-300">Dasar: Pasal 154-155 UU No. 20/2025 (KUHAP baru).</span>
+            </div>
+          </li>
+          <li>
+            <button type="button" class="item-gratis flex w-full items-start gap-2.5 rounded-xl border border-emerald-500/40 bg-slate-900/60 p-3 text-left" aria-expanded="false" aria-controls="detail-gratis-4">
+              <span class="panah-gratis mt-0.5 shrink-0 text-emerald-300 transition-transform" aria-hidden="true">▸</span>
+              <span><strong class="block text-sm font-extrabold text-white">🆔 Dokumen kependudukan — GRATIS</strong><span class="mt-0.5 block text-[12px] leading-snug text-slate-300">KTP-el, KK, akta kelahiran, akta kematian, dan dokumen kependudukan lainnya.</span></span>
+            </button>
+            <div id="detail-gratis-4" class="hidden mt-1.5 rounded-xl border border-emerald-500/30 bg-slate-900/60 p-3 text-[12px] leading-relaxed text-slate-300">
+              "Pengurusan dan penerbitan Dokumen Kependudukan <strong class="text-white">tidak dipungut biaya</strong>." Kalau petugas desa/kecamatan/Dukcapil minta bayaran untuk ini, itu pungli.
+              <span class="mt-1 block font-semibold text-emerald-300">Dasar: Pasal 79A UU No. 24/2013 tentang Administrasi Kependudukan.</span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="mt-3 rounded-xl border border-slate-600/60 bg-slate-900/60 p-3">
+          <p class="text-[12px] font-bold text-white">💰 Yang memang resmi berbayar (ada daftar + tarif bakunya)</p>
+          <p class="mt-1 text-[12px] leading-relaxed text-slate-300">Tarif resmi layanan kepolisian diatur PP No. 76/2020, misalnya: SIM C baru <strong class="text-white">Rp100.000</strong>, perpanjangan <strong class="text-white">Rp75.000</strong>; SKCK <strong class="text-white">Rp30.000</strong>; STNK roda 2 <strong class="text-white">Rp100.000</strong> (roda 4 Rp200.000). Tarif resmi selalu dibayar lewat kanal resmi dengan kuitansi/bukti bayar resmi — bukan tunai ke kantong petugas.</p>
+        </div>
+
+        <div class="mt-3 rounded-xl border-2 border-amber-500/60 bg-amber-500/10 p-3">
+          <p class="text-[12px] font-extrabold text-amber-300">🚫 Diminta uang di luar aturan? Lakukan ini:</p>
+          <ol class="mt-1.5 list-decimal space-y-1 pl-5 text-[12px] leading-relaxed text-slate-200">
+            <li>Tanya baik-baik: <em class="not-italic font-semibold text-amber-200">"Boleh saya lihat dasar hukum pungutannya?"</em></li>
+            <li>Minta kuitansi atau bukti pembayaran resmi. Tanpa itu, kamu berhak menolak membayar.</li>
+            <li>Catat nama petugas, pangkat/identitas, kesatuan/instansi, tanggal, jam, dan tempat.</li>
+            <li>Amankan bukti (foto, rekaman, chat, kuitansi tidak resmi) lalu kunci hash-nya di <button type="button" data-goto="brankas" class="font-semibold text-emerald-300 underline">Brankas Bukti</button> aplikasi ini.</li>
+            <li>Laporkan lewat kanal resmi di bawah ini.</li>
+          </ol>
+          <div class="mt-2.5 grid grid-cols-2 gap-2">
+            <a href="sms:1708" class="rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-bold text-white transition hover:bg-emerald-500">📩 LAPOR! SMS 1708</a>
+            <a href="tel:110" class="rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-bold text-white transition hover:bg-emerald-500">📞 Polisi 110 (Propam)</a>
+            <a href="https://www.lapor.go.id" target="_blank" rel="noopener" class="rounded-xl border border-emerald-500/50 px-3 py-2.5 text-center text-sm font-semibold text-emerald-200 transition hover:bg-emerald-500/10">🌐 lapor.go.id</a>
+            <a href="https://kws.kpk.go.id" target="_blank" rel="noopener" class="rounded-xl border border-emerald-500/50 px-3 py-2.5 text-center text-sm font-semibold text-emerald-200 transition hover:bg-emerald-500/10">⚖️ KPK (kws.kpk.go.id / 198)</a>
+          </div>
+        </div>
+
+        <p class="mt-3 rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-[12px] leading-relaxed text-slate-200">⚖️ <strong class="text-white">Pungli itu pidana berat.</strong> Petugas yang menyalahgunakan jabatannya memaksa orang membayar diancam penjara seumur hidup atau 4-20 tahun dan denda Rp200 juta-Rp1 miliar <em class="not-italic font-semibold text-rose-300/90">(Pasal 12 huruf e UU No. 20/2001)</em>. Hati-hati juga sebaliknya: "uang pelicin" atau "uang terima kasih" ke petugas bisa dianggap suap/gratifikasi dan menjerat dua pihak.</p>
+
+        <p class="mt-3 text-[11px] leading-relaxed text-slate-400">Sumber resmi: <a class="font-semibold text-indigo-300 underline" href="https://peraturan.bpk.go.id/Details/44418/uu-no-2-tahun-2002" target="_blank" rel="noopener">UU 2/2002</a> (<a class="font-semibold text-indigo-300 underline" href="https://peraturan.bpk.go.id/Details/350096/uu-no-5-tahun-2026" target="_blank" rel="noopener">diubah UU 5/2026</a>), <a class="font-semibold text-indigo-300 underline" href="https://peraturan.bpk.go.id/Details/156770/pp-no-76-tahun-2020" target="_blank" rel="noopener">PP 76/2020</a>, <a class="font-semibold text-indigo-300 underline" href="https://peraturan.bpk.go.id/Details/39234/uu-no-16-tahun-2011" target="_blank" rel="noopener">UU 16/2011</a>, <a class="font-semibold text-indigo-300 underline" href="https://peraturan.bpk.go.id/Details/337302/uu-no-20-tahun-2025" target="_blank" rel="noopener">UU 20/2025</a>, <a class="font-semibold text-indigo-300 underline" href="https://peraturan.bpk.go.id/Details/38985/uu-no-24-tahun-2013" target="_blank" rel="noopener">UU 24/2013</a>, <a class="font-semibold text-indigo-300 underline" href="https://peraturan.bpk.go.id/Details/44900/uu-no-20-tahun-2001" target="_blank" rel="noopener">UU 20/2001</a> — semua JDIH BPK. Ringkasan awam, bukan nasihat hukum.</p>
+      </section>
+
+      <!-- Grid fitur -->
+      <div class="mt-5 grid grid-cols-2 gap-3">
+        <button type="button" data-goto="analisis" class="kartu-fitur rounded-2xl border border-slate-700/60 bg-slate-800/50 p-4 text-left transition hover:border-indigo-500/50">
+          <span class="text-xl" aria-hidden="true">🔍</span>
+          <p class="mt-2 text-sm font-bold text-white">Analisis Hukum</p>
+          <p class="mt-0.5 text-[11px] leading-snug text-slate-400">Cocokkan ceritamu ke 89 pasal pilihan</p>
+        </button>
+        <button type="button" data-goto="brankas" class="kartu-fitur rounded-2xl border border-slate-700/60 bg-slate-800/50 p-4 text-left transition hover:border-indigo-500/50">
+          <span class="text-xl" aria-hidden="true">🔒</span>
+          <p class="mt-2 text-sm font-bold text-white">Brankas Bukti</p>
+          <p class="mt-0.5 text-[11px] leading-snug text-slate-400">Kunci bukti dengan hash SHA-256</p>
+        </button>
+        <button type="button" data-goto="surat" class="kartu-fitur rounded-2xl border border-slate-700/60 bg-slate-800/50 p-4 text-left transition hover:border-indigo-500/50">
+          <span class="text-xl" aria-hidden="true">📄</span>
+          <p class="mt-2 text-sm font-bold text-white">Surat Otomatis</p>
+          <p class="mt-0.5 text-[11px] leading-snug text-slate-400">Somasi, surat kuasa &amp; ekspor berkas</p>
+        </button>
+        <button type="button" data-goto="alat" class="kartu-fitur rounded-2xl border border-slate-700/60 bg-slate-800/50 p-4 text-left transition hover:border-indigo-500/50">
+          <span class="text-xl" aria-hidden="true">🧰</span>
+          <p class="mt-2 text-sm font-bold text-white">20 Alat Lainnya</p>
+          <p class="mt-0.5 text-[11px] leading-snug text-slate-400">Jelajah 1.900+ UU, kamus, LBH, OCR, QR &amp; lainnya</p>
+        </button>
+      </div>
+
+      <div class="mt-6 space-y-2 text-center">
+        <p class="text-xs font-semibold text-amber-300/90">⚠️ <span data-i18n="disclaimer">Aplikasi ini bukan pengacara. Konsultasi ke LBH.</span></p>
+        <p class="text-[11px] leading-relaxed text-slate-500">Analisis memakai pencocokan kata kunci berbobot + sinonim bahasa sehari-hari, berjalan lokal. Ini bukan AI dan bukan nasihat hukum.</p>
+        <p class="text-[11px] text-slate-500">☕ Gratis untuk rakyat. Kalau aplikasi ini membantu, traktir kopi ya — dukunganmu bikin layanan ini tetap hidup.</p>
+        <p class="mt-1 text-[11px] text-slate-600">© 2026 Erfin</p>
+      </div>
+    </section>
+
+    <!-- ========== ANALISIS (Fase 2,3,8,9,10,12,15) ========== -->
+    <section class="view hidden" id="view-analisis">
+      <div class="rounded-2xl border border-slate-700/60 bg-slate-800/50 p-5 shadow-xl shadow-black/20">
+        <h2 class="text-lg font-bold text-white" data-i18n="judul_analisis">Ceritakan masalahmu</h2>
+        <p class="mt-1 text-sm text-slate-400">Tulis kejadiannya dengan bahasa sehari-hari. Aplikasi mencocokkannya dengan 89 pasal pilihan dan indeks 1.900+ undang-undang, langsung di HP ini. Bukan AI: mesin pencocokan kata kunci yang jujur soal batasnya.</p>
+
+        <div class="mt-4" role="group" aria-label="Posisi kamu">
+          <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Posisi kamu</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="btnKorban" aria-pressed="true" class="tombol-peran rounded-xl border border-indigo-500 bg-indigo-500/15 px-3 py-2.5 text-sm font-semibold text-indigo-200">🛡️ Saya korban / pelapor</button>
+            <button type="button" id="btnTerlapor" aria-pressed="false" class="tombol-peran rounded-xl border border-slate-600 bg-slate-800 px-3 py-2.5 text-sm font-semibold text-slate-300 hover:border-slate-500">📩 Saya yang dilaporkan</button>
+          </div>
+        </div>
+
+        <label for="inputCerita" class="sr-only">Ceritakan masalah hukummu</label>
+        <textarea id="inputCerita" rows="5" data-i18n-ph="placeholder_cerita" placeholder="Ceritakan masalah hukummu di sini..."
+          class="mt-4 w-full resize-y rounded-xl border border-slate-600 bg-slate-900/70 p-3.5 text-sm leading-relaxed text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"></textarea>
+
+        <div class="mt-3 flex gap-2">
+          <button type="button" id="btnAnalisis" class="flex-1 rounded-xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-400 active:scale-[0.98]"><span data-i18n="tombol_analisis">Analisis Hukum</span></button>
+          <button type="button" id="btnHapusCerita" class="rounded-xl border border-slate-600 px-4 py-3 text-sm font-semibold text-slate-300 transition hover:border-rose-500/60 hover:text-rose-300 active:scale-[0.98]" data-i18n="tombol_hapus">Hapus</button>
+        </div>
+
+        <div id="hasilAnalisis" class="hidden" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ========== BRANKAS (Fase 4, 26, 35) ========== -->
+    <section class="view hidden" id="view-brankas">
+      <div class="rounded-2xl border border-slate-700/60 bg-slate-800/50 p-5 shadow-xl shadow-black/20">
+        <h2 class="text-lg font-bold text-white">Brankas Bukti</h2>
+        <p class="mt-1 text-sm text-slate-400">Kunci screenshot atau foto bukti dengan sidik jari digital (SHA-256). Gambar <span class="font-semibold text-slate-200">tidak pernah keluar dari HP kamu</span>; yang tersimpan hanya kode hash-nya.</p>
+
+        <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+          <label for="inputGambar" class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-slate-500 bg-slate-900/60 px-4 py-3 text-sm font-semibold text-slate-300 transition hover:border-indigo-400 hover:text-indigo-300">
+            <span aria-hidden="true">📎</span><span id="namaFileTerpilih">Pilih gambar / screenshot</span>
+          </label>
+          <input type="file" id="inputGambar" accept="image/*" class="sr-only">
+          <button type="button" id="btnHash" disabled class="rounded-xl bg-indigo-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-400 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">Kunci Bukti</button>
+        </div>
+
+        <div id="hasilHash" class="hidden" aria-live="polite"></div>
+
+        <div id="wadahRiwayatHash" class="mt-4 hidden">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Rekaman bukti terkunci</h3>
+            <button type="button" id="btnHapusSemuaHash" class="text-xs font-semibold text-rose-400 transition hover:text-rose-300">Hapus semua</button>
+          </div>
+          <ul id="daftarHash" class="space-y-2"></ul>
+        </div>
+      </div>
+
+      <!-- Stempel waktu publik (Fase 26) -->
+      <div class="mt-4 rounded-2xl border border-slate-700/60 bg-slate-800/50 p-5">
+        <h3 class="text-base font-bold text-white">⏱️ Stempel Waktu Publik</h3>
+        <p class="mt-1 text-sm text-slate-400">Kirim hash bukti ke jaringan OpenTimestamps agar dapat "cap waktu" global. Butuh internet <span class="text-slate-200 font-semibold">hanya saat men-cap</span>; yang dikirim hanya hash, bukan gambarmu.</p>
+        <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+          <label for="inputGambarOts" class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-slate-500 bg-slate-900/60 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:border-indigo-400 hover:text-indigo-300"><span aria-hidden="true">📎</span><span id="namaFileOts">Pilih gambar untuk di-cap</span></label>
+          <input type="file" id="inputGambarOts" accept="image/*" class="sr-only">
+          <button type="button" id="btnOts" disabled class="rounded-xl border border-indigo-500 bg-indigo-500/15 px-4 py-2.5 text-sm font-bold text-indigo-200 transition hover:bg-indigo-500/25 disabled:cursor-not-allowed disabled:opacity-40">Minta Stempel</button>
+        </div>
+        <div id="hasilOts" class="mt-3 hidden" aria-live="polite"></div>
+      </div>
+
+      <!-- Rekam & kunci suara (Fase 35) -->
+      <div class="mt-4 rounded-2xl border border-slate-700/60 bg-slate-800/50 p-5">
+        <h3 class="text-base font-bold text-white">🎙️ Mode "Saya Sedang Dengar"</h3>
+        <p class="mt-1 text-sm text-slate-400">Rekam suara ancaman lisan, lalu langsung kunci hash-nya. Jujur soal batasan: browser tidak bisa merekam diam-diam di latar belakang — layar harus menyala dan halaman ini terbuka.</p>
+        <div class="mt-3 flex gap-2">
+          <button type="button" id="btnRekam" class="flex-1 rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-rose-500">● Mulai Rekam</button>
+          <button type="button" id="btnStopRekam" disabled class="flex-1 rounded-xl border border-slate-600 px-4 py-2.5 text-sm font-bold text-slate-300 transition hover:border-slate-400 disabled:opacity-40">■ Stop &amp; Kunci Hash</button>
+        </div>
+        <p id="statusRekam" class="mt-2 hidden text-sm" aria-live="polite"></p>
+        <div id="hasilRekam" class="mt-2 hidden"></div>
+      </div>
+    </section>
+
+    <!-- ========== SURAT (Fase 5, 30, 14) ========== -->
+    <section class="view hidden" id="view-surat">
+      <div class="rounded-2xl border border-slate-700/60 bg-slate-800/50 p-5 shadow-xl shadow-black/20">
+        <h2 class="text-lg font-bold text-white">Surat Somasi Otomatis</h2>
+        <p class="mt-1 text-sm text-slate-400">Isi kolom di bawah, aplikasi menyusun draf somasi resmi berbahasa Indonesia baku dalam bentuk PDF.</p>
+        <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label for="inputNama" class="mb-1 block text-xs font-semibold text-slate-400">Nama lengkap kamu</label>
+            <input type="text" id="inputNama" placeholder="cth: Budi Santoso" autocomplete="name" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30">
+          </div>
+          <div>
+            <label for="inputLawan" class="mb-1 block text-xs font-semibold text-slate-400">Nama pihak yang disomasi</label>
+            <input type="text" id="inputLawan" placeholder="cth: Toko Berkah Online / Sdr. Joko" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30">
+          </div>
+          <div>
+            <label for="inputPerihal" class="mb-1 block text-xs font-semibold text-slate-400">Perihal tuntutan</label>
+            <input type="text" id="inputPerihal" placeholder="cth: Penipuan jual beli online" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30">
+          </div>
+          <div>
+            <label for="inputTanggal" class="mb-1 block text-xs font-semibold text-slate-400">Tanggal surat</label>
+            <input type="date" id="inputTanggal" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30">
+          </div>
+        </div>
+        <div class="mt-3">
+          <label for="inputKronologi" class="mb-1 block text-xs font-semibold text-slate-400">Kronologi singkat</label>
+          <textarea id="inputKronologi" rows="3" placeholder="Urutan kejadian secara singkat. Otomatis terisi dari ceritamu bila sudah diisi." class="w-full resize-y rounded-xl border border-slate-600 bg-slate-900/70 p-3 text-sm leading-relaxed text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"></textarea>
+        </div>
+        <button type="button" id="btnPdf" class="mt-3 w-full rounded-xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-400 active:scale-[0.98]">📄 Buat PDF Somasi</button>
+        <p id="statusPdf" class="mt-2 hidden text-sm" aria-live="polite"></p>
+      </div>
+
+      <!-- v6: Template Laporan Polisi -->
+      <div class="mt-4 rounded-2xl border border-slate-700/60 bg-slate-800/50 p-5" id="kartuLaporanPolisi">
+        <h3 class="text-base font-bold text-white">🚔 Laporan Polisi (Pengaduan Masyarakat)</h3>
+        <p class="mt-1 text-sm text-slate-400">Isi kolom di bawah, aplikasi menyusun dokumen LAPORAN PENGADUAN MASYARAKAT berbahasa Indonesia baku dalam bentuk PDF untuk dibawa ke kantor polisi.</p>
+        <p class="mt-2 rounded-xl border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-[12px] leading-snug text-slate-200">✅ <strong class="text-white">Membuat laporan polisi tidak dipungut biaya.</strong> Menerima laporan/pengaduan adalah tugas resmi Polri (Pasal 14 ayat (1) huruf l &amp; Pasal 15 ayat (1) huruf a UU 2/2002 jo. UU 5/2026); yang resmi berbayar hanya layanan dalam PP 76/2020 — dan laporan polisi tidak ada di daftar itu. Diminta bayar? Lihat kartu <span class="font-semibold text-emerald-300">"Layanan Ini GRATIS"</span> di Beranda.</p>
+        <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label for="lpPelapor" class="mb-1 block text-xs font-semibold text-slate-400">Nama Pelapor</label>
+            <input type="text" id="lpPelapor" autocomplete="name" placeholder="cth: Dewi Lestari" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30">
+          </div>
+          <div>
+            <label for="lpTerlapor" class="mb-1 block text-xs font-semibold text-slate-400">Nama Terlapor</label>
+            <input type="text" id="lpTerlapor" placeholder="cth: Rudi Hartono (bila belum tahu: tidak diketahui)" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30">
+          </div>
+          <div>
+            <label for="lpWaktu" class="mb-1 block text-xs font-semibold text-slate-400">Waktu Kejadian</label>
+            <input type="datetime-local" id="lpWaktu" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30">
+          </div>
+          <div>
+            <label for="lpTempat" class="mb-1 block text-xs font-semibold text-slate-400">Tempat Kejadian</label>
+            <input type="text" id="lpTempat" placeholder="cth: Pasar Kedungwuni, Pekalongan" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30">
+          </div>
+        </div>
+        <div class="mt-3">
+          <label for="lpKronologi" class="mb-1 block text-xs font-semibold text-slate-400">Kronologi Singkat</label>
+          <textarea id="lpKronologi" rows="4" placeholder="Urutan kejadian secara singkat. Otomatis terisi dari ceritamu bila sudah menjalankan Analisis." class="w-full resize-y rounded-xl border border-slate-600 bg-slate-900/70 p-3 text-sm leading-relaxed text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"></textarea>
+        </div>
+        <button type="button" id="btnLaporanPolisi" class="mt-3 w-full rounded-xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-400 active:scale-[0.98]">🚔 Buat PDF Laporan Polisi</button>
+        <p id="statusLaporan" class="mt-2 hidden text-sm" aria-live="polite"></p>
+      </div>
+
+      <!-- Surat kuasa darurat (Fase 30) -->
+      <div class="mt-4 rounded-2xl border border-slate-700/60 bg-slate-800/50 p-5">
+        <h3 class="text-base font-bold text-white">✍️ Surat Kuasa Darurat</h3>
+        <p class="mt-1 text-sm text-slate-400">Isi 1 menit, jadi PDF surat kuasa resmi — berguna bila kamu ditahan mendadak dan butuh orang kepercayaan mengurus sesuatu.</p>
+        <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label for="kuasaPemberi" class="mb-1 block text-xs font-semibold text-slate-400">Pemberi kuasa (kamu)</label>
+            <input type="text" id="kuasaPemberi" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500" placeholder="Nama lengkap">
+          </div>
+          <div>
+            <label for="kuasaPenerima" class="mb-1 block text-xs font-semibold text-slate-400">Penerima kuasa</label>
+            <input type="text" id="kuasaPenerima" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500" placeholder="Nama orang kepercayaan">
+          </div>
+        </div>
+        <div class="mt-3">
+          <label for="kuasaKeperluan" class="mb-1 block text-xs font-semibold text-slate-400">Untuk keperluan</label>
+          <input type="text" id="kuasaKeperluan" class="bhm-input w-full rounded-xl border border-slate-600 bg-slate-900/70 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-indigo-500" placeholder="cth: mengurus penangguhan penahanan dan mendampingi proses hukum">
+        </div>
+        <button type="button" id="btnKuasa" class="mt-3 w-full rounded-xl border border-indigo-500 bg-indigo-500/15 px-4 py-2.5 text-sm font-bold text-indigo-200 transition hover:bg-indigo-500/25">Buat PDF Surat Kuasa</button>
+        <p id="statusKuasa" class="mt-2 hidden text-sm" aria-live="polite"></p>
+      </div>
+
+      <!-- Ekspor berkas (Fase 14) -->
+      <div class="mt-4 rounded-2xl border border-slate-700/60 bg-slate-800/50 p-5">
+        <h3 class="text-base font-bold text-white">📦 Ekspor Berkas Lengkap</h3>
+        <p class="mt-1 text-sm text-slate-400">Gabungkan cerita, hasil analisis, dan semua hash bukti menjadi satu PDF laporan. 100% dibuat di HP kamu.</p>
+        <button type="button" id="btnEkspor" class="mt-3 w-full rounded-xl border border-indigo-500 bg-indigo-500/15 px-4 py-2.5 text-sm font-bold text-indigo-200 transition hover:bg-indigo-500/25">Unduh Laporan Lengkap (PDF)</button>
+        <p id="statusEkspor" class="mt-2 hidden text-sm" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- ========== ALAT (Fase 12-34 lainnya) ========== -->
+    <section class="view hidden" id="view-alat">
+      <div id="alatGrid" class="grid grid-cols-2 gap-3"></div>
+      <div id="alatDetail" class="hidden"></div>
+    </section>
+
+  </main>
+
+  <!-- Badge privasi melayang (Fase 11) -->
+  <div class="kaca pointer-events-none fixed bottom-20 right-3 z-10 rounded-full border border-emerald-500/40 px-3 py-1.5 text-[11px] font-bold text-emerald-300 shadow-lg">🔒 0 data keluar dari HP</div>
+
+  <!-- Navigasi bawah -->
+  <nav class="fixed bottom-0 left-0 right-0 z-20 border-t border-slate-800 bg-slate-900/95 backdrop-blur">
+    <div class="mx-auto grid max-w-2xl grid-cols-5">
+      <button type="button" class="nav-tab flex flex-col items-center gap-0.5 py-2.5 text-indigo-400" data-nav="beranda"><span class="text-lg" aria-hidden="true">🏠</span><span class="text-[11px] font-semibold" data-i18n="nav_beranda">Beranda</span></button>
+      <button type="button" class="nav-tab flex flex-col items-center gap-0.5 py-2.5 text-slate-500" data-nav="analisis"><span class="text-lg" aria-hidden="true">🔍</span><span class="text-[11px] font-semibold" data-i18n="nav_analisis">Analisis</span></button>
+      <button type="button" class="nav-tab flex flex-col items-center gap-0.5 py-2.5 text-slate-500" data-nav="brankas"><span class="text-lg" aria-hidden="true">🔒</span><span class="text-[11px] font-semibold" data-i18n="nav_brankas">Brankas</span></button>
+      <button type="button" class="nav-tab flex flex-col items-center gap-0.5 py-2.5 text-slate-500" data-nav="surat"><span class="text-lg" aria-hidden="true">📄</span><span class="text-[11px] font-semibold" data-i18n="nav_surat">Surat</span></button>
+      <button type="button" class="nav-tab flex flex-col items-center gap-0.5 py-2.5 text-slate-500" data-nav="alat"><span class="text-lg" aria-hidden="true">🧰</span><span class="text-[11px] font-semibold" data-i18n="nav_alat">Alat</span></button>
+    </div>
+  </nav>
+
+  <!-- Mode kamuflase: kalkulator polos (Fase 22) -->
+  <div id="kamuflase" class="fixed inset-0 z-40 hidden flex-col bg-slate-950">
+    <div class="mx-auto flex w-full max-w-sm flex-1 flex-col p-6">
+      <p class="text-center text-xs text-slate-600">Kalkulator</p>
+      <div id="kalDisplay" class="mt-3 rounded-2xl bg-slate-900 p-5 text-right text-3xl font-light text-white">0</div>
+      <div id="kalGrid" class="mt-4 grid flex-1 grid-cols-4 gap-3"></div>
+      <p class="mt-4 text-center text-[11px] text-slate-700">BHM</p>
+    </div>
+  </div>
+
+  <!-- Pemberitahuan kecil (toast) -->
+  <div id="toast" role="status" aria-live="polite" class="kaca pointer-events-none fixed bottom-24 left-1/2 z-50 hidden w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-xl border border-slate-600 px-4 py-3 text-center text-sm font-semibold text-slate-100 shadow-2xl"></div>
+
+  <!-- v6: Toast "Tersalin!" (disembunyikan secara default) -->
+  <div id="toast-notif" role="status" aria-live="polite" class="toast-notif pointer-events-none fixed bottom-24 left-1/2 z-50 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white shadow-xl"></div>
+
+  <!-- Area cetak laporan (hanya tampil saat window.print() bila jsPDF belum termuat) -->
+  <div id="cetak-laporan" aria-hidden="true"></div>
+
+</body>
+</html>

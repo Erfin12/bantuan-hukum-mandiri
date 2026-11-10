@@ -1,0 +1,200 @@
+/* ===== Bantuan Hukum Mandiri - gaya tambahan di luar Tailwind =====
+   Prinsip: animasi halus dan ringan, tanpa flicker, hormati reduced-motion. */
+
+:root {
+  color-scheme: dark;
+}
+
+/* Gulir halus di semua halaman dan komponen */
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+}
+
+/* Kontainer gulir di dalam halaman ikut halus + momentum di layar sentuh */
+*,
+*::before,
+*::after {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Cegah rantai gulir melompat ke halaman saat daftar panjang habis */
+.overflow-y-auto, .overflow-auto, .overflow-x-auto {
+  overscroll-behavior: contain;
+}
+
+/* Bilah gulir tipis yang serasi dengan palet */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: #475569; border-radius: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* Kemunculan kartu hasil: geser halus ke atas sambil memudar masuk */
+@keyframes bhm-muncul {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animasi-muncul {
+  animation: bhm-muncul 320ms ease-out both;
+}
+
+/* Transisi lembut untuk kartu dan tombol */
+.kartu, .tombol-peran, .kartu-fitur {
+  transition: border-color 200ms ease, background-color 200ms ease, color 200ms ease, transform 150ms ease, box-shadow 200ms ease;
+}
+
+/* Kartu fitur beranda: terangkat lembut saat disentuh/diarahkan */
+.kartu-fitur:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -12px rgba(99, 102, 241, 0.35);
+}
+.kartu-fitur:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Gaya kaca (glass) untuk elemen melayang: latar tembus pandang + blur */
+.kaca {
+  background-color: rgba(15, 23, 42, 0.82);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* Hash yang panjang tetap rapi dan bisa disalin */
+.kode-hash {
+  word-break: break-all;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* Fokus keyboard yang jelas untuk aksesibilitas */
+:focus-visible {
+  outline: 2px solid #818cf8;
+  outline-offset: 2px;
+}
+
+/* Kurangi semua gerakan bila pengguna memintanya */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ===================== v6 ===================== */
+
+/* Toast "Tersalin!" (#toast-notif): kotak kecil bawah-tengah, Slate-800, teks putih, fade-in */
+@keyframes bhm-toast-masuk {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+#toast-notif.toast-masuk { animation: bhm-toast-masuk 220ms ease-out both; }
+#toast-notif { background-color: #1e293b; color: #ffffff; }
+
+/* Banner "Pembaruan Tersedia" di bagian atas halaman */
+.banner-update {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 14px 10px;
+  background: #4f46e5; color: #fff; font-size: 13px; font-weight: 600; line-height: 1.3;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, .35);
+}
+.banner-update.hidden { display: none; }
+.banner-update-teks { text-align: center; }
+.banner-update-tombol { background: #fff; color: #3730a3; border: 0; border-radius: 9999px; padding: 6px 14px; font-weight: 800; font-size: 12.5px; cursor: pointer; }
+.banner-update-tombol:disabled { opacity: .7; cursor: default; }
+.banner-update-tutup { background: transparent; color: #e0e7ff; border: 0; padding: 4px 6px; font-size: 14px; cursor: pointer; }
+
+/* Buku Saku Darurat: poin yang sudah ditandai */
+.poin-saku { transition: background-color 150ms ease, border-color 150ms ease; }
+.poin-saku[aria-pressed="true"] { border-color: #10b981; background-color: rgba(16, 185, 129, .12); }
+.poin-saku[aria-pressed="true"] .kotak-saku { background-color: #10b981; border-color: #10b981; color: #fff; }
+
+/* Area cetak cadangan laporan polisi (window.print) */
+#cetak-laporan { display: none; }
+@media print {
+  html, body { background: #fff !important; color: #000 !important; }
+  body > *:not(#cetak-laporan) { display: none !important; }
+  #cetak-laporan { display: block !important; font-family: "Times New Roman", serif; font-size: 12pt; line-height: 1.5; color: #000; padding: 0; }
+  #cetak-laporan h1 { text-align: center; font-size: 15pt; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 16px; }
+  #cetak-laporan h2 { font-size: 12pt; margin: 12px 0 2px; }
+  #cetak-laporan p { margin: 0 0 8px; }
+  #cetak-laporan p.tujuan { margin: 0; }
+  #cetak-laporan p.perihal { font-weight: bold; margin: 12px 0; }
+  #cetak-laporan p.isi { padding-left: 18px; white-space: pre-wrap; }
+  #cetak-laporan .ttd { margin: 24px 0 0 55%; }
+  #cetak-laporan .ttd p { margin: 0; }
+  #cetak-laporan p.catatan { font-size: 8pt; color: #555; margin-top: 32px; }
+}
+
+/* ===== Mode Terang (class "dark" dicopot dari <html>) =====
+   Aplikasi memakai kelas warna gelap Tailwind secara langsung, jadi tiap warna
+   dipetakan manual ke padanan terangnya di sini. */
+html:not(.dark) .bg-slate-950{background-color:#e2e8f0}
+html:not(.dark) .bg-slate-900{background-color:#f1f5f9}
+html:not(.dark) .bg-slate-900\/95{background-color:rgba(248,250,252,.95)}
+html:not(.dark) .bg-slate-900\/90{background-color:rgba(248,250,252,.92)}
+html:not(.dark) .bg-slate-900\/70{background-color:#f8fafc}
+html:not(.dark) .bg-slate-900\/60{background-color:#f8fafc}
+html:not(.dark) .bg-slate-900\/50{background-color:#f8fafc}
+html:not(.dark) .bg-slate-800{background-color:#ffffff}
+html:not(.dark) .bg-slate-800\/50{background-color:#ffffff}
+html:not(.dark) .bg-slate-800\/40{background-color:#ffffff}
+html:not(.dark) .active\:bg-slate-700:active{background-color:#e2e8f0}
+html:not(.dark) .to-slate-800\/40{--tw-gradient-to:rgb(255 255 255 / .7)}
+html:not(.dark) .text-white{color:#0f172a}
+html:not(.dark) .text-slate-100{color:#0f172a}
+html:not(.dark) .text-slate-200{color:#1e293b}
+html:not(.dark) .text-slate-300{color:#334155}
+html:not(.dark) .text-slate-400{color:#475569}
+html:not(.dark) .text-slate-500{color:#64748b}
+html:not(.dark) .text-slate-600{color:#94a3b8}
+html:not(.dark) .text-slate-700{color:#94a3b8}
+html:not(.dark) .text-indigo-200{color:#3730a3}
+html:not(.dark) .text-indigo-300{color:#4338ca}
+html:not(.dark) .text-indigo-400{color:#4f46e5}
+html:not(.dark) .text-emerald-100{color:#064e3b}
+html:not(.dark) .text-emerald-200{color:#065f46}
+html:not(.dark) .text-emerald-300{color:#047857}
+html:not(.dark) .text-amber-200{color:#78350f}
+html:not(.dark) .text-amber-300{color:#b45309}
+html:not(.dark) .text-amber-300\/90{color:#b45309}
+html:not(.dark) .text-rose-200{color:#9f1239}
+html:not(.dark) .text-rose-300{color:#be123c}
+html:not(.dark) .text-rose-400{color:#e11d48}
+html:not(.dark) .hover\:text-rose-300:hover{color:#be123c}
+html:not(.dark) .hover\:text-indigo-300:hover{color:#4338ca}
+html:not(.dark) .hover\:text-indigo-200:hover{color:#3730a3}
+html:not(.dark) .hover\:text-amber-300:hover{color:#b45309}
+html:not(.dark) .placeholder-slate-500::placeholder{color:#94a3b8}
+html:not(.dark) .border-slate-800{border-color:#e2e8f0}
+html:not(.dark) .border-slate-700{border-color:#cbd5e1}
+html:not(.dark) .border-slate-700\/60{border-color:#cbd5e1}
+html:not(.dark) .border-slate-600{border-color:#cbd5e1}
+html:not(.dark) .border-slate-500{border-color:#94a3b8}
+html:not(.dark) .hover\:border-slate-500:hover{border-color:#94a3b8}
+html:not(.dark) .hover\:border-slate-400:hover{border-color:#64748b}
+html:not(.dark) .bg-indigo-500.text-white{color:#fff}
+html:not(.dark) .bg-indigo-400.text-white{color:#fff}
+html:not(.dark) .bg-rose-600.text-white{color:#fff}
+html:not(.dark) .bg-rose-500.text-white{color:#fff}
+html:not(.dark) .bg-emerald-600.text-white{color:#fff}
+html:not(.dark) .bg-amber-500.text-white{color:#fff}
+html:not(.dark) .kaca{background-color:rgba(255,255,255,.92)}
+:root:not(.dark){color-scheme:light}
+html:not(.dark) *{scrollbar-color:#cbd5e1 transparent}
+html:not(.dark) *::-webkit-scrollbar-thumb{background:#cbd5e1}
+html:not(.dark) .shadow-black\/20{--tw-shadow-color:rgb(15 23 42 / .08)}
+html:not(.dark) input[type=date],html:not(.dark) input[type=datetime-local]{color-scheme:light}
+html.dark input[type=date],html.dark input[type=datetime-local]{color-scheme:dark}
+html:not(.dark) #toast{background-color:#1e293b;color:#fff;border-color:#334155}
+html:not(.dark) .poin-saku .kotak-saku{border-color:#e11d48}
+

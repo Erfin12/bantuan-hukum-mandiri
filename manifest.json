@@ -1,0 +1,26 @@
+{
+  "name": "Bantuan Hukum Mandiri",
+  "short_name": "BHM",
+  "description": "Bantuan hukum mandiri untuk rakyat: cek pasal, kunci bukti, dan buat surat somasi. 100% offline dan privat.",
+  "lang": "id",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#6366f1",
+  "background_color": "#0f172a",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

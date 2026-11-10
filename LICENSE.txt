@@ -1,0 +1,13 @@
+BANTUAN HUKUM MANDIRI - KETENTUAN PENGGUNAAN KODE
+
+Copyright (c) 2026 Erfin. All rights reserved.
+
+Izin terbatas: Anda boleh membuka dan membaca kode ini untuk ditinjau.
+Tanpa izin tertulis sebelumnya dari pemegang hak, Anda tidak boleh
+menyalin, mengubah, membuat karya turunan, menerbitkan atau membagikan
+ulang kode/aplikasi, menjual atau memberi lisensi ulang, maupun mengaku
+sebagai pembuat atau pemegang haknya.
+
+Ketentuan ini adalah lisensi khusus untuk proyek ini, bukan lisensi
+open-source standar. Hak pihak ketiga atas pustaka, ikon, data, dan
+materi lain tetap mengikuti lisensi atau ketentuan masing-masing.

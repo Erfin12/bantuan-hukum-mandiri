@@ -1,5 +1,14 @@
-BANTUAN HUKUM MANDIRI (BHM) v6.4 - kredit hak cipta Erfin
+BANTUAN HUKUM MANDIRI (BHM) v6.5 - kredit hak cipta Erfin
 ============================================
+
+PEMBARUAN v6.5
+--------------
+Versi ini mempertahankan seluruh fitur v6.4 dan menambahkan tombol
+"Traktir Kopi" di bagian bawah Beranda, di bawah tulisan "Gratis untuk
+rakyat". Tombol membuka halaman Trakteer kre_hd (trakteer.id/kre_hd)
+di tab baru sehingga pengguna yang terbantu bisa memberi dukungan
+sukarela. Cache service worker dinaikkan ke bhm-v6.5 agar pembaruan
+dikenali perangkat.
 
 PEMBARUAN v6.4
 --------------

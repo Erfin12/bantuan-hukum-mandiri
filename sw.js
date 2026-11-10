@@ -5,7 +5,7 @@
    - Navigasi halaman: network dulu, bila offline sajikan index.html dari cache.
    - v6: pembaruan menunggu persetujuan pengguna lewat banner (SKIP_WAITING). */
 
-const VERSI_CACHE = 'bhm-v6.4'; // v6.4: kredit hak cipta dan pembaruan aplikasi
+const VERSI_CACHE = 'bhm-v6.5'; // v6.5: tombol Traktir Kopi (Trakteer) di Beranda
 
 // Aset inti yang dicache saat pemasangan.
 const ASET_INTI = [

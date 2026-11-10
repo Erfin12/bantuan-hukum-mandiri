@@ -110,8 +110,8 @@
     y += 6;
     cekHalaman(48);
     doc.text(L.tanggal, 130, y); y += 6;
-    doc.text('Hormat saya,', 130, y); y += 2;
-    doc.text('Pelapor,', 130, y); y += 24;
+    doc.text('Hormat saya,', 130, y); y += 6;
+    doc.text('Pelapor,', 130, y); y += 26;
     doc.setFont('helvetica', 'bold');
     doc.text(L.pelapor, 130, y, { maxWidth: 60 });
 

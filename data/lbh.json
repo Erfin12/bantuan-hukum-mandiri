@@ -1,0 +1,28 @@
+{
+  "sumber": "Direktori YLBHI (ylbhi.or.id/kontak) via GoodStats, diperiksa 10 November 2026",
+  "nasional": [
+    {"nama": "Kepolisian (Polri)", "kontak": "110", "jenis": "telepon", "catatan": "Layanan darurat kepolisian 24 jam, bebas pulsa."},
+    {"nama": "SAPA 129 KemenPPPA", "kontak": "129", "jenis": "telepon", "catatan": "Layanan pengaduan kekerasan terhadap perempuan dan anak."},
+    {"nama": "SAPA 129 WhatsApp", "kontak": "08111129129", "jenis": "whatsapp", "catatan": "Kanal WhatsApp SAPA 129 KemenPPPA."}
+  ],
+  "kantor": [
+    {"kota": "Jakarta", "nama": "LBH Jakarta", "telepon": ["085283226297", "0213145518"], "email": "kontak@bantuanhukum.or.id"},
+    {"kota": "Banda Aceh", "nama": "LBH Banda Aceh", "telepon": ["088212765968", "065122940"]},
+    {"kota": "Medan", "nama": "LBH Medan", "telepon": ["085296075321", "0614515340"]},
+    {"kota": "Padang", "nama": "LBH Padang", "telepon": ["082169293527", "07517051750"]},
+    {"kota": "Pekanbaru", "nama": "LBH Pekanbaru", "telepon": ["089537929630", "076145832"]},
+    {"kota": "Palembang", "nama": "LBH Palembang", "telepon": ["081369300442", "07115610122"]},
+    {"kota": "Bandar Lampung", "nama": "LBH Bandar Lampung", "telepon": ["082182222070", "07215600425"]},
+    {"kota": "Bandung", "nama": "LBH Bandung", "telepon": ["082258843986", "082120171321"]},
+    {"kota": "Semarang", "nama": "LBH Semarang", "telepon": ["082324230247", "088228902001", "02486453054"]},
+    {"kota": "Yogyakarta", "nama": "LBH Yogyakarta", "telepon": ["089510629630", "02744351490"]},
+    {"kota": "Surabaya", "nama": "LBH Surabaya", "telepon": ["082230003197", "0315022273"]},
+    {"kota": "Pontianak", "nama": "LBH Kalimantan Barat", "telepon": ["082253871694", "081258806816"]},
+    {"kota": "Samarinda", "nama": "LBH Samarinda", "telepon": ["082213619449"]},
+    {"kota": "Palangka Raya", "nama": "LBH Palangka Raya", "telepon": ["085786968317"]},
+    {"kota": "Denpasar", "nama": "LBH Bali", "telepon": ["0881037187402", "03613616134"]},
+    {"kota": "Makassar", "nama": "LBH Makassar", "telepon": ["085174482383", "04114677699"]},
+    {"kota": "Manado", "nama": "LBH Manado", "telepon": ["085397693642", "04318806473"]},
+    {"kota": "Jayapura", "nama": "LBH Papua", "telepon": ["082192060754", "09675187438"]}
+  ]
+}

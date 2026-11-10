@@ -1,0 +1,518 @@
+{
+ "dipukul": [
+  "penganiayaan",
+  "pukul"
+ ],
+ "dikeroyok": [
+  "perkelahian",
+  "pengeroyokan"
+ ],
+ "ditipu": [
+  "penipuan",
+  "tipu"
+ ],
+ "dibegal": [
+  "curas",
+  "begal",
+  "rampas"
+ ],
+ "dirampok": [
+  "curas",
+  "rampok"
+ ],
+ "kehilangan": [
+  "hilang",
+  "pencurian"
+ ],
+ "kemalingan": [
+  "pencurian",
+  "maling"
+ ],
+ "motor hilang": [
+  "pencurian",
+  "motor"
+ ],
+ "hp hilang": [
+  "pencurian"
+ ],
+ "digelapkan": [
+  "penggelapan"
+ ],
+ "titipan": [
+  "titip",
+  "penggelapan"
+ ],
+ "pinjaman tidak dikembalikan": [
+  "penggelapan"
+ ],
+ "selingkuh": [
+  "perzinaan",
+  "zina"
+ ],
+ "kumpul kebo": [
+  "kohabitasi",
+  "kumpul kebo"
+ ],
+ "nikah siri": [
+  "perkawinan",
+  "nikah siri",
+  "isbat"
+ ],
+ "dicerai": [
+  "perceraian",
+  "cerai"
+ ],
+ "mau cerai": [
+  "perceraian",
+  "cerai"
+ ],
+ "gono gini": [
+  "harta bersama",
+  "gono-gini"
+ ],
+ "dipecat": [
+  "phk",
+  "pesangon"
+ ],
+ "kena phk": [
+  "phk",
+  "pesangon"
+ ],
+ "gaji telat": [
+  "upah",
+  "gaji"
+ ],
+ "gaji kecil": [
+  "upah minimum",
+  "ump",
+  "gaji"
+ ],
+ "thr": [
+  "upah"
+ ],
+ "lembur tidak dibayar": [
+  "lembur",
+  "jam kerja"
+ ],
+ "kontrak kerja": [
+  "pkwt",
+  "kontrak"
+ ],
+ "resign": [
+  "mengundurkan diri",
+  "phk"
+ ],
+ "dihina": [
+  "penghinaan",
+  "hina"
+ ],
+ "dicekal": [
+  "pencemaran",
+  "nama baik"
+ ],
+ "fitnah": [
+  "pencemaran",
+  "nama baik"
+ ],
+ "dibuli": [
+  "perundungan"
+ ],
+ "diteror": [
+  "pengancaman",
+  "ancaman"
+ ],
+ "diancam": [
+  "pengancaman",
+  "ancaman"
+ ],
+ "diperas": [
+  "pemerasan"
+ ],
+ "diminta uang": [
+  "pemerasan",
+  "pungli"
+ ],
+ "pungli": [
+  "pungutan liar",
+  "suap"
+ ],
+ "nyogok": [
+  "suap"
+ ],
+ "korupsi": [
+  "tipikor"
+ ],
+ "dana desa": [
+  "tipikor",
+  "korupsi"
+ ],
+ "narkoba": [
+  "narkotika"
+ ],
+ "nyabu": [
+  "narkotika",
+  "penyalahguna"
+ ],
+ "ganja": [
+  "narkotika"
+ ],
+ "sabu": [
+  "narkotika"
+ ],
+ "kurir narkoba": [
+  "mengedarkan",
+  "narkotika"
+ ],
+ "kecanduan": [
+  "penyalahguna",
+  "rehabilitasi"
+ ],
+ "judi online": [
+  "judi",
+  "judol"
+ ],
+ "judi": [
+  "perjudian"
+ ],
+ "slot": [
+  "judi"
+ ],
+ "dihack": [
+  "akses ilegal",
+  "hack",
+  "bobol"
+ ],
+ "akun hilang": [
+  "akses ilegal",
+  "bobol"
+ ],
+ "dibobol": [
+  "akses ilegal",
+  "bobol"
+ ],
+ "data bocor": [
+  "data pribadi"
+ ],
+ "disebar": [
+  "data pribadi",
+  "konten seksual"
+ ],
+ "foto intim": [
+  "konten seksual"
+ ],
+ "video pribadi": [
+  "konten seksual"
+ ],
+ "diancam sebar": [
+  "konten seksual",
+  "pengancaman"
+ ],
+ "stalking": [
+  "penguntitan",
+  "konten seksual"
+ ],
+ "dikutit": [
+  "penguntitan"
+ ],
+ "dilecehkan": [
+  "pelecehan seksual",
+  "cabul"
+ ],
+ "dicabulin": [
+  "pencabulan",
+  "cabul"
+ ],
+ "digerayangi": [
+  "pelecehan seksual",
+  "cabul"
+ ],
+ "diperkosa": [
+  "perkosaan"
+ ],
+ "rudapaksa": [
+  "perkosaan"
+ ],
+ "kdrt": [
+  "kekerasan dalam rumah tangga"
+ ],
+ "dipukul suami": [
+  "kdrt",
+  "kekerasan"
+ ],
+ "toxic": [
+  "kdrt psikis",
+  "kekerasan"
+ ],
+ "anak dipukul": [
+  "kekerasan terhadap anak",
+  "anak"
+ ],
+ "anak dicabuli": [
+  "pencabulan anak",
+  "anak"
+ ],
+ "pacaran dengan anak": [
+  "persetubuhan dengan anak",
+  "anak"
+ ],
+ "dibawah umur": [
+  "anak",
+  "di bawah umur"
+ ],
+ "ditilang": [
+  "tilang",
+  "lalu lintas"
+ ],
+ "tanpa sim": [
+  "sim"
+ ],
+ "sim mati": [
+  "sim"
+ ],
+ "tanpa stnk": [
+  "stnk"
+ ],
+ "pajak mati": [
+  "stnk"
+ ],
+ "knalpot brong": [
+  "tidak laik",
+  "knalpot"
+ ],
+ "lampu merah": [
+  "rambu",
+  "apil"
+ ],
+ "terobos": [
+  "melanggar",
+  "rambu"
+ ],
+ "nabrak": [
+  "kecelakaan",
+  "kelalaian"
+ ],
+ "ketabrak": [
+  "kecelakaan",
+  "korban"
+ ],
+ "tabrak lari": [
+  "tabrak lari"
+ ],
+ "kecelakaan": [
+  "lalu lintas",
+  "kecelakaan"
+ ],
+ "barang palsu": [
+  "konsumen",
+  "palsu"
+ ],
+ "kadaluarsa": [
+  "konsumen",
+  "kedaluwarsa"
+ ],
+ "refund": [
+  "ganti rugi",
+  "konsumen"
+ ],
+ "komplain": [
+  "konsumen"
+ ],
+ "penjual kabur": [
+  "konsumen",
+  "penipuan"
+ ],
+ "olshop": [
+  "konsumen",
+  "penipuan online"
+ ],
+ "barang tidak sampai": [
+  "penipuan online",
+  "konsumen"
+ ],
+ "utang": [
+  "utang piutang",
+  "perdata"
+ ],
+ "hutang": [
+  "utang piutang"
+ ],
+ "pinjol": [
+  "pinjaman online",
+  "utang"
+ ],
+ "debt collector": [
+  "fidusia",
+  "leasing"
+ ],
+ "ditarik leasing": [
+  "fidusia",
+  "leasing"
+ ],
+ "kredit macet": [
+  "fidusia",
+  "pailit"
+ ],
+ "bangkrut": [
+  "pailit"
+ ],
+ "pkpu": [
+  "restrukturisasi",
+  "pailit"
+ ],
+ "tanah sengketa": [
+  "tanah",
+  "sengketa"
+ ],
+ "patok": [
+  "batas tanah"
+ ],
+ "serobot": [
+  "batas tanah",
+  "tanah"
+ ],
+ "sertifikat": [
+  "tanah",
+  "hak milik"
+ ],
+ "warisan": [
+  "waris",
+  "harta"
+ ],
+ "jual tanah": [
+  "tanah",
+  "hak milik"
+ ],
+ "girik": [
+  "tanah",
+  "pendaftaran"
+ ],
+ "ditangkap": [
+  "penangkapan",
+  "kuhap"
+ ],
+ "diciduk": [
+  "penangkapan"
+ ],
+ "ditahan": [
+  "penahanan"
+ ],
+ "dipenjara": [
+  "penahanan"
+ ],
+ "pengacara gratis": [
+  "bantuan hukum",
+  "penasihat hukum"
+ ],
+ "sidang": [
+  "pengadilan"
+ ],
+ "bap": [
+  "pemeriksaan",
+  "kuhap"
+ ],
+ "meterai": [
+  "bea meterai"
+ ],
+ "materai": [
+  "bea meterai"
+ ],
+ "surat perjanjian": [
+  "perjanjian",
+  "kuhperdata"
+ ],
+ "ingkar janji": [
+  "wanprestasi"
+ ],
+ "kontrak dilanggar": [
+  "wanprestasi",
+  "perjanjian"
+ ],
+ "ganti rugi": [
+  "ganti rugi",
+  "perbuatan melawan hukum"
+ ],
+ "melawan hukum": [
+  "perbuatan melawan hukum"
+ ],
+ "sajam": [
+  "senjata tajam"
+ ],
+ "bawa pisau": [
+  "senjata tajam"
+ ],
+ "senjata api": [
+  "senjata api",
+  "senjata tajam"
+ ],
+ "hak cipta": [
+  "hak cipta"
+ ],
+ "bajak": [
+  "pembajakan",
+  "hak cipta"
+ ],
+ "jiplak": [
+  "hak cipta"
+ ],
+ "lagu dibajak": [
+  "hak cipta"
+ ],
+ "pencucian uang": [
+  "pencucian uang"
+ ],
+ "rekening dipinjam": [
+  "pencucian uang"
+ ],
+ "gratifikasi": [
+  "gratifikasi",
+  "tipikor"
+ ],
+ "menyebar kebencian": [
+  "ujaran kebencian",
+  "sara"
+ ],
+ "rasis": [
+  "ujaran kebencian",
+  "sara"
+ ],
+ "hoaks": [
+  "berita bohong",
+  "hoaks"
+ ],
+ "penyebar hoaks": [
+  "berita bohong"
+ ],
+ "konten negatif": [
+  "ite",
+  "konten"
+ ],
+ "pencemaran medsos": [
+  "pencemaran",
+  "medsos"
+ ],
+ "memukul": [
+  "penganiayaan",
+  "kekerasan"
+ ],
+ "mukul": [
+  "penganiayaan",
+  "kekerasan"
+ ],
+ "mukulin": [
+  "penganiayaan"
+ ],
+ "menyebarkan foto": [
+  "konten seksual"
+ ],
+ "menyebarkan video": [
+  "konten seksual"
+ ],
+ "rekaman": [
+  "video",
+  "rekam"
+ ],
+ "mantan": [
+  "mantan pacar",
+  "bekas"
+ ]
+}

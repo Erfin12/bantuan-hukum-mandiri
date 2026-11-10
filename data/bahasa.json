@@ -1,0 +1,20 @@
+{
+  "bahasa": [
+    {"id": "baku", "label": "Indonesia (baku)"},
+    {"id": "santai", "label": "Indonesia santai"},
+    {"id": "jawa", "label": "Jawa"},
+    {"id": "sunda", "label": "Sunda"}
+  ],
+  "ui": {
+    "nav_beranda": {"baku": "Beranda", "santai": "Beranda", "jawa": "Ngarep", "sunda": "Tepas"},
+    "nav_analisis": {"baku": "Analisis", "santai": "Analisis", "jawa": "Priksa", "sunda": "Pariksa"},
+    "nav_brankas": {"baku": "Brankas", "santai": "Brankas", "jawa": "Brankas", "sunda": "Brankas"},
+    "nav_surat": {"baku": "Surat", "santai": "Surat", "jawa": "Layang", "sunda": "Surat"},
+    "nav_alat": {"baku": "Alat", "santai": "Alat", "jawa": "Piranti", "sunda": "Pakakas"},
+    "judul_analisis": {"baku": "Ceritakan masalahmu", "santai": "Ceritain masalahmu", "jawa": "Critaaken masalahe", "sunda": "Caritakeun masalahna"},
+    "placeholder_cerita": {"baku": "Ceritakan masalah hukummu di sini...", "santai": "Ceritain aja masalah hukummu di sini...", "jawa": "Critaaken masalah hukumé ing kene...", "sunda": "Caritakeun masalah hukumna didieu..."},
+    "tombol_analisis": {"baku": "Analisis Hukum", "santai": "Cek Hukumnya", "jawa": "Priksa Hukumé", "sunda": "Pariksa Hukumna"},
+    "tombol_hapus": {"baku": "Hapus", "santai": "Hapus", "jawa": "Busak", "sunda": "Hapus"},
+    "disclaimer": {"baku": "Aplikasi ini bukan pengacara. Konsultasi ke LBH.", "santai": "Aplikasi ini bukan pengacara ya. Tetap konsultasi ke LBH.", "jawa": "Aplikasi iki dudu pengacara. Tetep konsultasi neng LBH.", "sunda": "Ieu aplikasi lain pengacara. Tetep konsultasi ka LBH."}
+  }
+}
